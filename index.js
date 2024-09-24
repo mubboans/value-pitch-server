@@ -3,10 +3,10 @@ const express = require('express')
 const cors = require("cors");
 
 const app = express()
-const authroute = require('./route/auth-route');
-const { route_not_found } = require('./helper/res-helper');
-const { dbConnect } = require('./dbConfig/dbConfig');
-const { createSocket } = require('./controller/socket-helper');
+const authroute = require('./src/route/auth-route');
+const { route_not_found } = require('./src/helper/res-helper');
+const { dbConnect } = require('./src/dbConfig/dbConfig');
+const { createSocket } = require('./src/controller/socket-helper');
 const port = process.env.PORT || 8008;
 
 const corsOptions = {
@@ -31,8 +31,7 @@ app.use('/valuepitch', authroute);
 app.use(route_not_found)
 const { server } = createSocket(app);
 server.listen(port, async () => {
-    // console.log(`Server is running on port ${port}`);
+
     await dbConnect()
-    // await dbConnect();
     console.log(`Your app listening on port ${port}`)
 });

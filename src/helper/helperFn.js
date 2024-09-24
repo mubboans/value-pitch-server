@@ -11,7 +11,7 @@ function ValidateEmail(email) {
 }
 
 const getCurrentFormatedDate = () => {
-    console.log(momentjsDate(new Date()).format("YYYY-MM-DD HH:mm:ss"));
+
     return moment(new Date())
         .tz(process.env.TIMEZONE)
         .format("YYYY-MM-DD HH:mm:ss")

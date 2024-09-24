@@ -5,13 +5,13 @@ const { returnResponse } = require("../helper/res-helper");
 const TryCatch = require("../helper/tryCatch")
 
 const getUser = TryCatch(async (req, res, next) => {
-    let userRecord = await fnGet(db.Users, query, [], false);
+    let userRecord = await fnGet(db.Users, req.query);
     return returnResponse(res, 200, 'Successfully Get User', userRecord)
 }
 )
 
 const putUser = TryCatch(async (req, res, next) => {
-    let updateStatus = await fnUpdate(db.Users, req.body, { id: req.body.id })
+    await fnUpdate(db.Users, req.body, { id: req.body.id })
 
     return returnResponse(res, 200, 'Successfully Update User')
 }

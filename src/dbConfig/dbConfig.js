@@ -6,6 +6,7 @@ const sequelize = new Sequelize(process.env.DB, process.env.USER,
     host: process.env.HOST,
     dialect: process.env.DB_DIALECT,
     operationsAliases: false,
+    logging: false,
     pool: {
         max: 5,
         min: 0,
@@ -18,11 +19,14 @@ const db = {};
 
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
-db.Users = Users(sequelize, Sequelize);
 async function dbConnect() {
     try {
-        await sequelize.authenticate();
-        await sequelize.sync({ alter: false });
+        db.Users = await Users(sequelize, Sequelize);
+        await db.sequelize.authenticate();
+        await db.sequelize.sync({ alter: false });
+        console.log('====================================');
+        console.log('db sync');
+        console.log('====================================');
     } catch (error) {
         console.log(error, 'error in connecting')
     }
