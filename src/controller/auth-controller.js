@@ -1,38 +1,43 @@
 const { db } = require("../dbConfig/dbConfig");
 const CustomError = require("../error/customError");
+const { attachedToken } = require("../helper/attachedToken");
 const { fnGet, fnUpdate, fnPost, fnDelete } = require("../helper/commonDbFn");
 const { returnResponse } = require("../helper/res-helper");
 const TryCatch = require("../helper/tryCatch")
+const bcrypt = require('bcryptjs');
+const Login = TryCatch(async (req, res) => {
+    let body = req.body;
+    let userRecord = await fnGet(db.Users, { email: body.email });
+    let hashPass = body.email + body.password;
+    if (bcrypt.compareSync(hashPass, userRecord.password)) {
+        if (!userRecord.isActive) throw new CustomError('It seems your account is Freeze', 403);
+        if (userRecord.deletionDate) throw CustomError('It seem your account is deleted', 403);
 
-const getUser = TryCatch(async (req, res, next) => {
-    let userRecord = await fnGet(db.Users, req.query);
-    return returnResponse(res, 200, 'Successfully Get User', userRecord)
-}
-)
-
-const putUser = TryCatch(async (req, res, next) => {
-    await fnUpdate(db.Users, req.body, { id: req.body.id })
-
-    return returnResponse(res, 200, 'Successfully Update User')
-}
-)
-
-
-const postUser = TryCatch(async (req, res, next) => {
-    await fnPost(db.Users, req.body);
-    return returnResponse(res, 201, 'Successfully Added User');
-}
-)
-
-const deleteUser = TryCatch(async (req, res, next) => {
-    if (!req.query.id) {
-        throw new CustomError('id required', 400)
+        const newPayload = {
+            id: userRecord.id, email: userRecord.email, role: userRecord.role, type: userRecord.type,
+        };
+        let data = attachedToken(newPayload)
+        return returnResponse(res, 200, 'Login Succesfully',
+            // {
+            //     ...data, role: userDetails.role,
+            //     id: userDetails.id,
+            //     isVerified: userDetails.isVerified,
+            //     rejectionreason: userDetails.rejectionreason,
+            //     email: userDetails.email,
+            //     linkDevice: userDetails.linkDevice,
+            //     status: userDetails.status,
+            //     userDetailId: userDetails.userdetail[0]?.id,
+            //     userdetail: userDetails.userdetail
+            // }
+            loginReponse(userDetails, data)
+        );
     }
-    await fnDelete(User, req.query)
-    return returnResponse(res, 200, 'Successfully Delete User')
-}
-)
+    throw new CustomError("Account detail not match")
+})
 
+const Register = TryCatch(async (req, res) => {
+
+})
 module.exports = {
-    deleteUser, getUser, postUser, putUser
+    Login, Register
 }
