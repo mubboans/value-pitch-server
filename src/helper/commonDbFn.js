@@ -6,7 +6,7 @@ const fnGet = async (model, query = {}) => {
         order: [["id", "DESC"]]
     }
     try {
-        let returnRecord = model.findAll(query);
+        let returnRecord = await model.findAll(query);
         return returnRecord;
     } catch (error) {
         throw new CustomError(error?.message, 500)
@@ -27,7 +27,7 @@ const fnUpdate = async (model, obj, condition) => {
 }
 const fnPost = async (model, obj) => {
     try {
-        let user = model.create(obj);
+        let user = await model.create(obj);
         return user;
     } catch (error) {
         throw new CustomError(error?.message, 400)

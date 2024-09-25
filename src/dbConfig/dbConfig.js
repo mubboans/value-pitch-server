@@ -1,5 +1,6 @@
 const { Sequelize, DataTypes } = require('sequelize');
 const { Users } = require('../models/Users');
+const { Relation } = require('../models/Relation');
 
 const sequelize = new Sequelize(process.env.DB, process.env.USER,
     process.env.PASSWORD, {
@@ -22,6 +23,7 @@ db.sequelize = sequelize;
 async function dbConnect() {
     try {
         db.Users = await Users(sequelize, Sequelize);
+        db.Relation = await Relation(sequelize, Sequelize);
         await db.sequelize.authenticate();
         await db.sequelize.sync({ alter: false });
         console.log('====================================');

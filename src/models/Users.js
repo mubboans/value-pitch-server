@@ -44,8 +44,8 @@ async function Users(sequelize, Sequelize) {
         role: {
             type: Sequelize.ENUM,
             values: ['admin', 'client', 'user'],
-            // defaultValue: "explorer"
-            allowNull: true
+            defaultValue: "user",
+            allowNull: false
         },
 
         isActive: {
@@ -72,6 +72,14 @@ async function Users(sequelize, Sequelize) {
             allowNull: true
         },
         deleteReason: {
+            type: Sequelize.STRING,
+            allowNull: true,
+        },
+        otherdetail: {
+            type: Sequelize.STRING,
+            allowNull: true,
+        },
+        industry: {
             type: Sequelize.STRING,
             allowNull: true,
         }
