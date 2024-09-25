@@ -4,15 +4,27 @@ async function Relation(sequelize, Sequelize) {
     const Relation = sequelize.define("Relation", {
         userid: {
             type: Sequelize.INTEGER,
-            allowNull: true
+            allowNull: true,
+            references: {
+                model: 'Users', // Name of the Users table
+                key: 'id'
+            }
         },
         clientid: {
             type: Sequelize.INTEGER,
-            allowNull: true
+            allowNull: true,
+            references: {
+                model: 'Users',
+                key: 'id'
+            }
         },
         adminid: {
             type: Sequelize.INTEGER,
-            allowNull: true
+            allowNull: true,
+            references: {
+                model: 'Users',
+                key: 'id'
+            }
         },
         relationtype: {
             type: Sequelize.INTEGER,
@@ -27,6 +39,11 @@ async function Relation(sequelize, Sequelize) {
 
 
     });
+    Relation.associate = (models) => {
+        Relation.belongsTo(models.Users, { foreignKey: 'userid', as: 'user' });
+        Relation.belongsTo(models.Users, { foreignKey: 'clientid', as: 'client' });
+        Relation.belongsTo(models.Users, { foreignKey: 'adminid', as: 'admin' });
+    };
     return Relation;
 };
 

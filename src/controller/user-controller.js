@@ -14,7 +14,8 @@ const getUser = TryCatch(async (req, res, next) => {
 )
 
 const putUser = TryCatch(async (req, res, next) => {
-    await emitUserUpdate(body.email, req.user);
+
+    await emitUserUpdate(req.body.email, req.user);
     await fnUpdate(db.Users, req.body, { id: req.body.id })
     return returnResponse(res, 200, 'Successfully Update User')
 }
@@ -47,7 +48,7 @@ const deleteUser = TryCatch(async (req, res, next) => {
     if (!req.query.id) {
         throw new CustomError('id required', 400)
     }
-    await fnDelete(User, req.query)
+    await fnDelete(db.Users, req.query)
     return returnResponse(res, 200, 'Successfully Delete User')
 }
 )

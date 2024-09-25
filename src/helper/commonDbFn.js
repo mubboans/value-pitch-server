@@ -1,9 +1,10 @@
 const CustomError = require("../error/customError");
 
-const fnGet = async (model, query = {}) => {
+const fnGet = async (model, query = {}, inlcude = []) => {
     query = {
         where: query,
-        order: [["id", "DESC"]]
+        order: [["id", "DESC"]],
+        include: inlcude.length > 0 ? inlcude : '',
     }
     try {
         let returnRecord = await model.findAll(query);

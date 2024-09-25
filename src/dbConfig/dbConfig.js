@@ -24,6 +24,14 @@ async function dbConnect() {
     try {
         db.Users = await Users(sequelize, Sequelize);
         db.Relation = await Relation(sequelize, Sequelize);
+        db.Users.hasMany(db.Relation, { foreignKey: 'userid', as: 'userRelations' });
+        db.Users.hasMany(db.Relation, { foreignKey: 'clientid', as: 'clientRelations' });
+        db.Users.hasMany(db.Relation, { foreignKey: 'adminid', as: 'adminRelations' });
+
+        db.Relation.belongsTo(db.Users, { foreignKey: 'userid', as: 'user' });
+        db.Relation.belongsTo(db.Users, { foreignKey: 'clientid', as: 'client' });
+        db.Relation.belongsTo(db.Users, { foreignKey: 'adminid', as: 'admin' });
+
         await db.sequelize.authenticate();
         await db.sequelize.sync({ alter: false });
         console.log('====================================');
