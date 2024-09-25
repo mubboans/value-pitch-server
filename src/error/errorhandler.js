@@ -6,7 +6,7 @@ function apiErrorHandler(err, req, res, next) {
             message: err?.message,
             success: false,
             error: err?.error,
-            status: 'falied'
+            status: 'Falied'
         }
         return res.status(err.code).send(data);
         // console.log('running after the return');
