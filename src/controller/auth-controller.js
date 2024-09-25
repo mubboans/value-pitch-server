@@ -25,9 +25,10 @@ const Login = TryCatch(async (req, res, next) => {
         let data = attachedToken(newPayload)
         return returnResponse(res, 200, 'Login Succesfully',
             {
+                ...data,
                 id: userRecord.id,
                 email: userRecord.email,
-                type: userRecord.type, role: userRecord.role, ...data
+                type: userRecord.type, role: userRecord.role,
             }
         );
     }
@@ -48,9 +49,10 @@ const Register = TryCatch(async (req, res, next) => {
     let data = attachedToken(newPayload)
     return returnResponse(res, 200, 'Login Succesfully',
         {
+            ...data,
             id: userRecord.id,
             email: userRecord.email,
-            type: userRecord.type, role: userRecord.role, ...data
+            type: userRecord.type, role: userRecord.role,
         }
     );
 })
