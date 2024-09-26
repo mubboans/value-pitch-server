@@ -41,7 +41,7 @@ const getRelation = TryCatch(async (req, res, next) => {
 
 const putRelation = TryCatch(async (req, res, next) => {
 
-    await emitRelationUpdate(req.body.email, req.Relation);
+    // await emitRelationUpdate(req.body.email, req.Relation);
     await fnUpdate(db.Relation, req.body, { id: req.body.id })
     return returnResponse(res, 200, 'Successfully Update Relation')
 }
@@ -52,20 +52,8 @@ const postRelation = TryCatch(async (req, res, next) => {
     console.log('====================================');
     console.log(req.Relation, 'check Relation');
     console.log('====================================');
-    setRelationrolenType(req.Relation, next, req.body);
-    let RelationCheck = await fnGet(db.Relation, {
-        [Op.or]: [
-            { contact: req.body.contact },
-            { email: req.body.email }
-        ]
-    });
-    if (RelationCheck && RelationCheck.length > 0) {
-        return next(new CustomError('Relation Already Exits', 409))
-    }
-    req.body.isActive = true
-    req.body.password = bcrypt.hashSync(req.body.password + req.body.email, 10)
-    let Relation = await fnPost(db.Relation, req.body);
-    await createRelationRelation(req.Relation, { ...req.body, Relationid: Relation.id }, next)
+    await fnPost(db.Relation, req.body);
+    // await createRelationRelation(req.Relation, { ...req.body, Relationid: Relation.id }, next)
     return returnResponse(res, 201, 'Successfully Added Relation');
 }
 )
