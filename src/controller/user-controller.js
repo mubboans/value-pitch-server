@@ -8,6 +8,20 @@ const { emitUserUpdate } = require("./socket-helper");
 const bcrypt = require('bcryptjs');
 
 const getUser = TryCatch(async (req, res, next) => {
+    if (req.user.role == 'admin') {
+        req.query = {
+            ...req.query,
+        }
+    }
+    else if (req.user.role == 'client') {
+        req.query = {
+            ...req.query,
+            [Op.or]: [
+                { role: 'user' },
+                { role: 'client' }
+            ]
+        }
+    }
     let userRecord = await fnGet(db.Users, req.query);
     return returnResponse(res, 200, 'Successfully Get User', userRecord)
 }
@@ -27,6 +41,11 @@ const postUser = TryCatch(async (req, res, next) => {
     console.log(req.user, 'check User');
     console.log('====================================');
     setUserrolenType(req.user, next, req.body);
+    req.body = {
+        ...req.body,
+        ...(req.user.role == 'client' ? { role: 'user' } : { role: req.body.role }),
+        ...(req.user.role == 'client' ? { type: 'user' } : { type: req.body.type })
+    }
     let userCheck = await fnGet(db.Users, {
         [Op.or]: [
             { contact: req.body.contact },
@@ -60,6 +79,7 @@ async function setUserrolenType(user, next, body) {
         }
     }
     else if (user.role == 'client') {
+
         if (!body.firstname || !body.lastname || !body.email || !body.contact || !body.otherdetail) {
             return next(new CustomError('Invalid Data to create user', 400))
         }

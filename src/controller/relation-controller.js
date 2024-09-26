@@ -8,6 +8,21 @@ const { emitUserUpdate } = require("./socket-helper");
 const bcrypt = require('bcryptjs');
 
 const getRelation = TryCatch(async (req, res, next) => {
+    if (req.user.role == 'admin') {
+        req.query = {
+            ...req.query,
+            adminid: req.user.id
+        }
+    }
+    else if (req.user.role == 'client') {
+        req.query = {
+            ...req.query,
+            clientid: req.user.id
+        }
+    }
+    else {
+        return next(new CustomError('User cant have relation', 401))
+    }
     let RelationRecord = await fnGet(db.Relation, req.query, [
         {
             model: db.Users,
